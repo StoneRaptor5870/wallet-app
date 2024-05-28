@@ -19,6 +19,10 @@
   "packageManager": "npm@10.5.0",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/db",
+    "packages/ui",
+    "packages/eslint-config",
+    "packages/store",
+    "packages/typescript-config"
   ]
 }
