@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "exports": {
-    "./useBalance": "./src/hooks/useBalance"
+    "./balance": "./src/hooks/useBalance"
   },
   "keywords": [],
   "author": "",
