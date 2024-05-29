@@ -1,5 +1,4 @@
-import { PrismaClient } from "@repo/db/client";
-const client = new PrismaClient();
+import { prisma } from "@repo/db/client";
 
 export default function Page(): JSX.Element {
   return (
