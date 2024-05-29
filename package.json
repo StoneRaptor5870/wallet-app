@@ -18,7 +18,9 @@
   },
   "packageManager": "npm@10.5.0",
   "workspaces": [
-    "apps/*",
+    "apps/bank-webhook",
+    "apps/merchant-app",
+    "apps/user-app",
     "packages/db",
     "packages/ui",
     "packages/eslint-config",
