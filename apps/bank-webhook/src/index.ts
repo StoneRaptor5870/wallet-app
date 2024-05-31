@@ -13,6 +13,7 @@ const paymentInformationSchema = z.object({
 
 app.post("/hdfcWebhook", async (req, res) => {
   //TODO: HDFC bank should ideally send us a secret so we know this is sent by them
+  // check if this onramptxn processing or not
   const paymentInformation: {
     token: string;
     userId: string;
