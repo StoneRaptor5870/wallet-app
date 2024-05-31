@@ -24,6 +24,7 @@ export const AddMoney = () => {
   );
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
   const [amount, setAmount] = useState(0);
+
   return (
     <Card title="Add Money">
       <div className="w-full">
@@ -37,16 +38,13 @@ export const AddMoney = () => {
         <div className="py-4 text-left">Bank</div>
         <Select
           onSelect={(value) => {
-            setRedirectUrl(
-              SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ""
-            );
-            setProvider(
-              SUPPORTED_BANKS.find((x) => x.name === value)?.name || ""
-            );
+            const selectedBank = SUPPORTED_BANKS.find((x) => x.name === value);
+            setRedirectUrl(selectedBank?.redirectUrl || "");
+            setProvider(selectedBank?.name || "");
           }}
-          options={SUPPORTED_BANKS.map((x) => ({
-            key: x.name,
-            value: x.name,
+          options={SUPPORTED_BANKS.map((bank) => ({
+            key: bank.name,
+            value: bank.name,
           }))}
         />
         <div className="flex justify-center pt-4">
