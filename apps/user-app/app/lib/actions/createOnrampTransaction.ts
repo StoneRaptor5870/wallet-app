@@ -3,31 +3,67 @@
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
+import axios from "axios";
 
 export async function createOnRampTransaction(
   provider: string,
   amount: number
 ) {
-  // Ideally the token should come from the banking provider (hdfc/axis)
   const session = await getServerSession(authOptions);
   if (!session?.user || !session.user?.id) {
+    console.error("Unauthenticated request");
     return {
       message: "Unauthenticated request",
     };
   }
-  const token = (Math.random() * 1000).toString();
-  await prisma.onRampTransaction.create({
-    data: {
-      provider,
-      status: "Processing",
-      startTime: new Date(),
+
+  console.log("Generating token...");
+  const response = await axios.get("http://localhost:3002/tokenGenerator");
+  const token = response.data.token;
+
+  console.log("Checking for existing transaction...");
+  const existingTransaction = await prisma.onRampTransaction.findUnique({
+    where: {
       token: token,
-      userId: Number(session?.user?.id),
-      amount: amount * 100,
     },
   });
 
-  return {
-    message: "Done",
-  };
+  if (existingTransaction) {
+    console.log("Transaction already initiated");
+    return {
+      message: "Transaction already initiated",
+    };
+  }
+
+  console.log("Sending token and transaction details to bank server...");
+  const bankResponse = await axios.post("http://localhost:3002/bankWebhook", {
+    token,
+    user_identifier: session.user.id.toString(), // Ensure user_identifier is a string
+    amount: amount.toString(), // Ensure amount is a string
+  });
+
+  console.log("Bank response:", bankResponse.data);
+
+  if (bankResponse.data.message === "Captured") {
+    console.log("Creating transaction in database...");
+    await prisma.onRampTransaction.create({
+      data: {
+        provider,
+        status: "Success",
+        startTime: new Date(),
+        token: token,
+        userId: Number(session.user.id),
+        amount: amount * 100,
+      },
+    });
+
+    return {
+      message: "Transaction Successful",
+    };
+  } else {
+    console.error("Failed to initiate transaction");
+    return {
+      message: "Failed to initiate transaction",
+    };
+  }
 }
