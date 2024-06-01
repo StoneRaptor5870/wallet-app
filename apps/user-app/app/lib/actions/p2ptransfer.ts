@@ -33,7 +33,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
       },
       data: {
         amount: {
-          decrement: Number(amount) * 100,
+          decrement: Number(amount),
         },
       },
     });
@@ -43,7 +43,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
       },
       data: {
         amount: {
-          increment: Number(amount) * 100,
+          increment: Number(amount),
         },
       },
     });
@@ -53,7 +53,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
         fromUserId: Number(from),
         toUserId: Number(toUser.id),
         timestamp: new Date(),
-        amount: Number(amount) * 100,
+        amount: Number(amount),
       },
     });
 
