@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: existingUser.id.toString(),
               name: existingUser.name,
-              email: existingUser.number,
+              number: existingUser.number,
             } as User;
           }
           return null;
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
           return {
             id: user.id.toString(),
             name: user.name,
-            email: user.number,
+            number: user.number,
           } as User;
         } catch (e) {
           console.error(e);
