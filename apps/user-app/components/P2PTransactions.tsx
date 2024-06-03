@@ -26,7 +26,7 @@ export const P2pTransactions = async ({
 
   return (
     <Card title="Recent Transactions">
-      <div>
+      <div style={{ maxHeight: '16rem', overflowY: 'auto', paddingTop: '0.5rem' }}>
         {transactions.map((t) => (
           <div className="flex w-full justify-between my-2">
             {t.toUserId === id ? (

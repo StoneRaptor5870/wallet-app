@@ -26,5 +26,9 @@
     "packages/eslint-config",
     "packages/store",
     "packages/typescript-config"
-  ]
+  ],
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "react-chartjs-2": "^5.2.0"
+  }
 }
