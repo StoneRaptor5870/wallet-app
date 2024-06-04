@@ -30,6 +30,7 @@ export default function P2PTransfer() {
           <Button
             onClick={async () => {
               await p2ptransfer(number, amount);
+              location.reload();
             }}
           >
             Transfer
