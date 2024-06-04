@@ -1,29 +1,15 @@
-"use client";
+import Dashboard from "../../../components/Dashboard";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../lib/auth";
 
-import { Card } from "@repo/ui/card";
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+  const name = session?.user?.name;
 
-export default function () {
   return (
-    <div className="flex justify-center items-center w-3/4 h-screen -mt-20">
-      <Card title="Home">
-        <div className="flex flex-col justify-center items-center">
-          <div className="w-full p-4">
-            <p className="text-xl">Bank to Wallet Transfer</p>
-            <div>
-              This feature lets you withdraw money from a dummy bank api which
-              approves the request for the withdrawal, as a web hook and then
-              the wallet server receives the approval, finally adding money to
-              the wallet balance.
-            </div>
-          </div>
-          <div className="w-full p-4">
-            <p className="text-xl">Peer to Peer Transfer</p>
-            <div>
-              This feature lets you transfer money to another user by their phone number.
-            </div>
-          </div>
-        </div>
-      </Card>
+    <div className="flex flex-col items-center justify-center w-full p-4 gap-4 -mt-4">
+      <div className="mb-4 text-2xl font-bold">Welcome Back, {name}</div>
+      <Dashboard />
     </div>
   );
 }

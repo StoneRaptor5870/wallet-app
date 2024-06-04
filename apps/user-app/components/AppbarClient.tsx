@@ -7,14 +7,22 @@ export function AppbarClient() {
   const session = useSession();
   const router = useRouter();
 
+  const handleSignout = async () => {
+    try {
+      await signOut({ redirect: false });
+      router.push("/signin");
+    } catch (error) {
+      console.error("Error during signout", error);
+    }
+  };
+
   return (
     <div>
-       <Appbar onSignin={signIn} onSignout={async () => {
-         console.log("Signing out"); // Debug log
-         await signOut(); // Ensure this line executes successfully
-         console.log("Redirecting to signin"); // Debug log
-         router.push("/signin");
-       }} user={session.data?.user} />
+      <Appbar
+        onSignin={signIn}
+        onSignout={handleSignout}
+        user={session.data?.user}
+      />
     </div>
-   );
+  );
 }

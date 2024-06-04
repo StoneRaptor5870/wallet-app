@@ -1,33 +1,32 @@
-import { SidebarItem } from "../../components/SidebarItem";
+"use client"
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}): JSX.Element {
+import { SidebarItem } from "../../components/SidebarItem";
+import { useState } from "react";
+
+export default function Layout({ children }: { children: React.ReactNode }): JSX.Element {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="flex">
-      <div className="flex-col w-60 border-r border-slate-300 min-h-screen mr-4 pt-28 cursor-pointer">
-        <div className="flex flex-col gap-[2px]">
+    <div className="flex min-h-screen">
+      <div className={`fixed inset-0 z-30 flex-none w-60 p-4 bg-white border-r border-slate-300 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-200 ease-in-out`}>
+        <div className="flex flex-col gap-2">
           <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Home" />
-          <SidebarItem
-            href={"/transfer"}
-            icon={<TransferIcon />}
-            title="Bank Transfer"
-          />
-          {/* <SidebarItem
-            href={"/transactions"}
-            icon={<TransactionsIcon />}
-            title="Transactions"
-          /> */}
-          <SidebarItem
-            href={"/p2pTransfer"}
-            icon={<P2PTransferIcon />}
-            title="P2P Transfer"
-          />
+          <SidebarItem href={"/transfer"} icon={<TransferIcon />} title="Bank Transfer" />
+          {/* <SidebarItem href={"/transactions"} icon={<TransactionsIcon />} title="Transactions" /> */}
+          <SidebarItem href={"/p2pTransfer"} icon={<P2PTransferIcon />} title="P2P Transfer" />
         </div>
       </div>
-      {children}
+      <div className="flex flex-col flex-1 w-full">
+        <button
+          className="p-4 text-left md:hidden"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <main className="flex-1 p-4" onClick={() => setIsSidebarOpen(false)}>{children}</main>
+      </div>
     </div>
   );
 }
@@ -68,7 +67,6 @@ function TransferIcon() {
     </svg>
   );
 }
-
 // function TransactionsIcon() {
 //   return (
 //     <svg
@@ -87,7 +85,6 @@ function TransferIcon() {
 //     </svg>
 //   );
 // }
-
 function P2PTransferIcon() {
   return (
     <svg
