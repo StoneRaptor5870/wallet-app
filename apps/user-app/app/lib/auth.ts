@@ -8,11 +8,13 @@ import { z } from "zod";
 interface Credentials {
   phone: string;
   password: string;
+  name?: string;
 }
 
 const credentialsSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits").max(15, "Phone number must be at most 15 digits"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().optional(),
   // otp: z.string().optional(), Assuming OTP is optional for now
 });
 
@@ -21,10 +23,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+        name: { label: "Name", type: "text", optional: true },
         phone: {
           label: "Phone number",
           type: "text",
-          placeholder: "1231231231",
         },
         password: { label: "Password", type: "password" },
       },
@@ -40,7 +42,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const { phone, password } = parsed.data;
+        const { phone, password, name } = parsed.data;
 
         const hashedPassword = await bcrypt.hash(credentials.password, 10);
         const existingUser = await prisma.user.findFirst({
@@ -67,6 +69,7 @@ export const authOptions: NextAuthOptions = {
         try {
           const user = await prisma.user.create({
             data: {
+              name: name,
               number: phone,
               password: hashedPassword,
             },
@@ -94,4 +97,8 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "/signin",
+    signOut: "/signin"
+  }
 };

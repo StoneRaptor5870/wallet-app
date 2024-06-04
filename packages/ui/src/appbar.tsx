@@ -14,9 +14,9 @@ export const Appbar = ({
     onSignin,
     onSignout
 }: AppbarProps) => {
-    return <div className="flex justify-between border-b px-4 text-[#6a51a6]">
+    return <div className="flex justify-between border-b px-4 text-[#6a51a6] bg-white">
         <div className="text-2xl font-bold flex flex-col justify-center text-[#6a51a6]">
-            Wallet App
+            Go Finance
         </div>
         <div className="flex flex-col justify-center pt-2">
             <Button onClick={user ? onSignout : onSignin}>{user ? "Logout" : "Login"}</Button>
