@@ -27,6 +27,12 @@ model P2PTransfer {
   fromUser   User     @relation(name: "FromUserRelation", fields: [fromUserId], references: [id])
   toUserId   Int
   toUser     User     @relation(name: "ToUserRelation", fields: [toUserId], references: [id])
+  fromMerchantId     Int?
+  fromMerchant       Merchant? @relation(name: "FromMerchantRelation", fields: [fromMerchantId], references: [id])
+  toMerchantId       Int?
+  toMerchant         Merchant? @relation(name: "ToMerchantRelation", fields: [toMerchantId], references: [id])
+
+  @@unique([fromUserId, fromMerchantId, toUserId, toMerchantId])
 }
 
 model Merchant {
@@ -34,6 +40,10 @@ model Merchant {
   email     String   @unique
   name      String?
   auth_type AuthType
+  OnRampTransaction  OnRampTransaction[]
+  Balance            Balance[]
+  sentTransfer      P2PTransfer[]       @relation(name: "FromMerchantRelation")
+  receivedTransfer  P2PTransfer[]       @relation(name: "ToMerchantRelation")
 }
 
 model OnRampTransaction {
@@ -45,14 +55,22 @@ model OnRampTransaction {
   startTime DateTime
   userId    Int
   user      User         @relation(fields: [userId], references: [id])
+  merchantId Int?
+  merchant   Merchant?    @relation(fields: [merchantId], references: [id])
+
+  @@unique([userId, merchantId])
 }
 
 model Balance {
   id     Int  @id @default(autoincrement())
   userId Int  @unique
+  merchantId Int?      @unique
   amount Int
   locked Int
   user   User @relation(fields: [userId], references: [id])
+  merchant   Merchant? @relation(fields: [merchantId], references: [id])
+
+  @@unique([userId, merchantId])
 }
 
 enum AuthType {
