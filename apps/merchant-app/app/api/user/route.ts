@@ -1,15 +1,22 @@
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import prisma from "@repo/db/client";
+import { authOptions } from "../../../lib/auth";
 
 export const GET = async () => {
-  await prisma.merchant.create({
-    data: {
-      email: "verma2@example.com",
-      name: "anuj",
-      auth_type: "Google"
-    },
-  });
+  const session = await getServerSession(authOptions);
+  
+  if (!session || !session.user) {
+    return NextResponse.json(
+      {
+        message: "You are not logged in",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   return NextResponse.json({
-    message: "hi there",
+    user: session.user,
   });
 };
