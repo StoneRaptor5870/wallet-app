@@ -8,8 +8,8 @@ export const P2pTransactions = async ({
 }: {
   transactions: {
     amount: number;
-    fromUserId: string;
-    toUserId: string;
+    fromUserId: string | null;
+    toUserId: string | null;
     timestamp: Date;
   }[];
 }) => {
