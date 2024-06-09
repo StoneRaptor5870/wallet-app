@@ -8,13 +8,13 @@ export const P2pTransactions = async ({
 }: {
   transactions: {
     amount: number;
-    fromUserId: number;
-    toUserId: number;
+    fromUserId: string;
+    toUserId: string;
     timestamp: Date;
   }[];
 }) => {
   const session = await getServerSession(authOptions);
-  const id = Number(session?.user?.id);
+  const id = session?.user?.id;
 
   if (!transactions.length) {
     return (

@@ -21,7 +21,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     await tx.$queryRaw`SELECT*FROM "Balance" WHERE "userId"  = ${Number(from)} FOR UPDATE`; //locks the Balance table
     const fromBalance = await tx.balance.findFirst({
       where: {
-        userId: Number(from),
+        userId: from,
       },
     });
     if (!fromBalance || fromBalance?.amount < amount) {
@@ -29,7 +29,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     }
     await tx.balance.update({
       where: {
-        userId: Number(from),
+        userId: from,
       },
       data: {
         amount: {
@@ -39,7 +39,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     });
     await tx.balance.update({
       where: {
-        userId: Number(toUser.id),
+        userId: toUser.id,
       },
       data: {
         amount: {
@@ -50,8 +50,8 @@ export const p2ptransfer = async (to: string, amount: number) => {
 
     await tx.p2PTransfer.create({
       data: {
-        fromUserId: Number(from),
-        toUserId: Number(toUser.id),
+        fromUserId: from,
+        toUserId: toUser.id,
         timestamp: new Date(),
         amount: Number(amount),
       },

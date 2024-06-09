@@ -9,8 +9,8 @@ const getp2ptransaction = async () => {
   const transactions = await prisma.p2PTransfer.findMany({
     where: {
       OR: [
-        { fromUserId: Number(session?.user?.id) },
-        { toUserId: Number(session?.user?.id) },
+        { fromUserId: session?.user?.id },
+        { toUserId: session?.user?.id },
       ],
     },
     orderBy: {

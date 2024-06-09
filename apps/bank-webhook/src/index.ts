@@ -93,6 +93,7 @@ app.post("/bankWebhook", async (req, res) => {
             amount: {
               increment: Number(parsedAmount),
             },
+            locked: 0,
           },
         }),
         prisma.onRampTransaction.updateMany({

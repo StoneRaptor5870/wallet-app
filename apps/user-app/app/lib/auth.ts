@@ -75,6 +75,14 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
+          const balance = await prisma.balance.create({
+            data: {
+              userId: user.id.toString(),
+              amount: 0,
+              locked: 0
+            }
+          })
+
           return {
             id: user.id.toString(),
             name: user.name,
