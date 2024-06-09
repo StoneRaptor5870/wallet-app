@@ -10,7 +10,7 @@ export function AppbarClient() {
   const handleSignout = async () => {
     try {
       await signOut({ redirect: false });
-      router.push("/api/auth/signin");
+      router.push("/signin");
     } catch (error) {
       console.error("Error during signout", error);
     }

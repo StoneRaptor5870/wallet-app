@@ -48,13 +48,21 @@ export const authOptions: NextAuthOptions = {
         }
       });
 
-      await prisma.balance.create({
-        data: {
-          merchantId: dbUser.id,
-          amount: 1000,
-          locked: 0
+      const existingUser = await prisma.merchant.findFirst({
+        where: {
+          email: user.email
         }
       })
+
+      if (!existingUser) {
+        await prisma.balance.create({
+          data: {
+            merchantId: dbUser.id,
+            amount: 1000,
+            locked: 0
+          }
+        })
+      }
 
       user.id = dbUser.id.toString();
 
@@ -69,4 +77,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET || "secret",
+  pages: {
+    signIn: "/signin",
+    signOut: "/signin"
+  }
 };
