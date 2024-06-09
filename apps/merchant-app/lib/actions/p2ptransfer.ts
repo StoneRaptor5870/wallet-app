@@ -18,10 +18,10 @@ export const p2ptransfer = async (to: string, amount: number) => {
   if (!toUser) return { message: "User not found" };
 
   await prisma.$transaction(async (tx) => {
-    await tx.$queryRaw`SELECT*FROM "Balance" WHERE "userId"  = ${Number(from)} FOR UPDATE`; //locks the Balance table
+    await tx.$queryRaw`SELECT*FROM "Balance" WHERE "userId"  = ${from} FOR UPDATE`; //locks the Balance table
     const fromBalance = await tx.balance.findFirst({
       where: {
-        userId: from,
+        merchantId: from,
       },
     });
     if (!fromBalance || fromBalance?.amount < amount) {
@@ -29,7 +29,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     }
     await tx.balance.update({
       where: {
-        userId: from,
+        merchantId: from,
       },
       data: {
         amount: {
@@ -39,7 +39,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     });
     await tx.balance.update({
       where: {
-        userId: toUser.id,
+        merchantId: toUser.id,
       },
       data: {
         amount: {
@@ -50,8 +50,8 @@ export const p2ptransfer = async (to: string, amount: number) => {
 
     await tx.p2PTransfer.create({
       data: {
-        fromUserId: from,
-        toUserId: toUser.id,
+        fromMerchantId: from,
+        toMerchantId: toUser.id,
         timestamp: new Date(),
         amount: Number(amount),
       },

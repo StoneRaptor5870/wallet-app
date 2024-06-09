@@ -7,7 +7,7 @@ import { TextInput } from "../../../packages/ui/src/textinput";
 import { p2ptransfer } from "../lib/actions/p2ptransfer";
 
 export default function P2PTransfer() {
-  const [number, setNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [amount, setAmount] = useState(0);
   return (
     <div className="w-full">
@@ -17,7 +17,7 @@ export default function P2PTransfer() {
             placeholder="Email"
             label="Email"
             onChange={(e: any) => {
-              setNumber(e);
+              setEmail(e);
             }}
           />
           <TextInput
@@ -29,7 +29,7 @@ export default function P2PTransfer() {
           />
           <Button
             onClick={async () => {
-              await p2ptransfer(number, amount);
+              await p2ptransfer(email, amount);
               location.reload();
             }}
           >

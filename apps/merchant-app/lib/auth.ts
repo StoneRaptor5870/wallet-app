@@ -48,6 +48,14 @@ export const authOptions: NextAuthOptions = {
         }
       });
 
+      await prisma.balance.create({
+        data: {
+          merchantId: dbUser.id,
+          amount: 1000,
+          locked: 0
+        }
+      })
+
       user.id = dbUser.id.toString();
 
       return true;

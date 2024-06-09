@@ -8,8 +8,8 @@ export const P2pTransactions = async ({
 }: {
   transactions: {
     amount: number;
-    fromUserId: string;
-    toUserId: string;
+    fromMerchantId: string | null;
+    toMerchantId: string | null;
     timestamp: Date;
   }[];
 }) => {
@@ -29,7 +29,7 @@ export const P2pTransactions = async ({
       <div style={{ maxHeight: '16rem', overflowY: 'auto', paddingTop: '0.5rem' }}>
         {transactions.map((t) => (
           <div className="flex w-full justify-between my-2">
-            {t.toUserId === id ? (
+            {t.toMerchantId === id ? (
               <div className="flex w-full justify-between my-2">
                 <div>
                   <div className="text-sm">Received INR</div>
