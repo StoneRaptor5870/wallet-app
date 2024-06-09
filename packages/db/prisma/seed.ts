@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   const alice = await prisma.user.upsert({
-    where: { number: "1111111111" },
+    where: { number: "3333333333" },
     update: {},
     create: {
-      number: "1111111111",
+      number: "3333333333",
       password: await bcrypt.hash("12345678", 10),
       name: "alice",
       Balance: {

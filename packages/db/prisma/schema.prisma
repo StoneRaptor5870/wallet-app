@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
+  id                String                 @id @default(uuid())
   email             String?             @unique
   name              String?
   number            String              @unique
@@ -23,20 +23,20 @@ model P2PTransfer {
   id         Int      @id @default(autoincrement())
   amount     Int
   timestamp  DateTime
-  fromUserId Int
+  fromUserId String
   fromUser   User     @relation(name: "FromUserRelation", fields: [fromUserId], references: [id])
-  toUserId   Int
+  toUserId   String
   toUser     User     @relation(name: "ToUserRelation", fields: [toUserId], references: [id])
-  fromMerchantId     Int?
+  fromMerchantId     String?
   fromMerchant       Merchant? @relation(name: "FromMerchantRelation", fields: [fromMerchantId], references: [id])
-  toMerchantId       Int?
+  toMerchantId       String?
   toMerchant         Merchant? @relation(name: "ToMerchantRelation", fields: [toMerchantId], references: [id])
 
   @@unique([fromUserId, fromMerchantId, toUserId, toMerchantId])
 }
 
 model Merchant {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid())
   email     String   @unique
   name      String?
   auth_type AuthType
@@ -53,9 +53,9 @@ model OnRampTransaction {
   provider  String
   amount    Int
   startTime DateTime
-  userId    Int
+  userId    String
   user      User         @relation(fields: [userId], references: [id])
-  merchantId Int?
+  merchantId String?
   merchant   Merchant?    @relation(fields: [merchantId], references: [id])
 
   @@unique([userId, merchantId])
@@ -63,10 +63,10 @@ model OnRampTransaction {
 
 model Balance {
   id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  merchantId Int?      @unique
-  amount Int
-  locked Int
+  userId String  @unique
+  merchantId String?      @unique
+  amount Int              @default(1000)
+  locked Int              @default(0)
   user   User @relation(fields: [userId], references: [id])
   merchant   Merchant? @relation(fields: [merchantId], references: [id])
 

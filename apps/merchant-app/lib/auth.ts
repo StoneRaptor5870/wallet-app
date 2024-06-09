@@ -1,7 +1,8 @@
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "@repo/db/client";
-import { NextAuthOptions, User, Account, Profile } from "next-auth";
+import { NextAuthOptions, User, Account, Profile, Session } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -23,13 +24,13 @@ export const authOptions: NextAuthOptions = {
       profile?: Profile | undefined;
       email?: { verificationRequest?: boolean | undefined } | undefined;
       credentials?: Record<string, any> | undefined;
-    }): Promise<boolean> {
+    }): Promise<string | boolean> {
       console.log("hi signin");
       if (!user || !user.email) {
         return false;
       }
 
-      await prisma.merchant.upsert({
+      const dbUser = await prisma.merchant.upsert({
         select: {
           id: true
         },
@@ -47,8 +48,17 @@ export const authOptions: NextAuthOptions = {
         }
       });
 
+      user.id = dbUser.id.toString();
+
       return true;
-    }
+    },
+
+    async session({ token, session }: { token: JWT; session: Session }): Promise<Session> {
+      if (session.user) {
+        session.user.id = token.sub || "";
+      }
+      return session;
+    },
   },
-  secret: process.env.NEXTAUTH_SECRET || "secret"
+  secret: process.env.NEXTAUTH_SECRET || "secret",
 };

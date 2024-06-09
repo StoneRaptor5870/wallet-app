@@ -87,7 +87,7 @@ app.post("/bankWebhook", async (req, res) => {
       const transaction = await prisma.$transaction([
         prisma.balance.updateMany({
           where: {
-            userId: Number(userId),
+            userId: userId,
           },
           data: {
             amount: {
