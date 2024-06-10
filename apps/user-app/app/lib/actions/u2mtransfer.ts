@@ -3,16 +3,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
 
-export const p2ptransfer = async (to: string, amount: number) => {
+export const u2mtransfer = async (to: string, amount: number) => {
   const session = await getServerSession(authOptions);
   if (!session?.user || !session?.user?.id)
     return { message: "Unauthenticated request" };
 
   const from = session?.user?.id;
 
-  const toUser = await prisma.user.findFirst({
+  const toUser = await prisma.merchant.findFirst({
     where: {
-      number: to,
+      email: to,
     },
   });
   if (!toUser) return { message: "User not found" };
@@ -39,7 +39,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     });
     await tx.balance.update({
       where: {
-        userId: toUser.id,
+        merchantId: toUser.id,
       },
       data: {
         amount: {
@@ -51,7 +51,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
     await tx.p2PTransfer.create({
       data: {
         fromUserId: from,
-        toUserId: toUser.id,
+        toMerchantId: toUser.id,
         timestamp: new Date(),
         amount: Number(amount),
       },
