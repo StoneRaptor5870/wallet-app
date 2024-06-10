@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }): JSX
           <SidebarItem href={"/transfer"} icon={<TransferIcon />} title="Bank Transfer" />
           {/* <SidebarItem href={"/transactions"} icon={<TransactionsIcon />} title="Transactions" /> */}
           <SidebarItem href={"/p2pTransfer"} icon={<P2PTransferIcon />} title="P2P Transfer" />
+          <SidebarItem href={"/m2uTransfer"} icon={<P2PTransferIcon />} title="M2U Transfer" />
         </div>
       </div>
       <div className="flex flex-col flex-1 w-full">
