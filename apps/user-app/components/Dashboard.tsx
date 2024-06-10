@@ -22,6 +22,12 @@ export default function Home() {
               This feature lets you transfer money to another user by their phone number.
             </div>
           </div>
+          <div className="w-full p-4">
+            <p className="text-xl">User to Merchant Transfer</p>
+            <div>
+              This feature lets you transfer money to merchant by their email.
+            </div>
+          </div>
         </div>
       </Card>
     </div>
