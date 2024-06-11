@@ -15,6 +15,8 @@ const Dashboard: React.FC<DashboardProps> = ({ amounts, times }) => {
       <div className="flex flex-col justify-center items-center w-[60%] h-[60%] gap-4 mb-8">
         {/* @ts-ignore */}
         <LineChart amounts={amounts} times={times} />
+        <div className="flex justify-center items-center p-4">This time series graph tells about the peer to peer transactions made by the user. 
+          Amount inflow and outflow, you can change the time axis with given buttons too.</div>
       </div>
         <div className="flex flex-col justify-center items-center">
           <div className="w-full p-4">
