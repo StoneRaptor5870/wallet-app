@@ -1,11 +1,21 @@
 "use client";
 
 import { Card } from "@repo/ui/card";
+import LineChart from "./TimeSeries";
 
-export default function Home() {
+interface DashboardProps {
+  amounts: number[];
+  times: string[];
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ amounts, times }) => {
   return (
-    <div className="flex justify-center items-center w-full h-full">
+    <div className="flex flex-col justify-center items-center w-full h-full">
       <Card title="Home">
+      <div className="flex flex-col justify-center items-center w-[60%] h-[60%] gap-4 mb-8">
+        {/* @ts-ignore */}
+        <LineChart amounts={amounts} times={times} />
+      </div>
         <div className="flex flex-col justify-center items-center">
           <div className="w-full p-4">
             <p className="text-xl">Bank to Wallet Transfer</p>
@@ -33,3 +43,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Dashboard;
