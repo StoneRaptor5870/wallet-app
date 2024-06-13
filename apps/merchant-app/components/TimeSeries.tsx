@@ -53,12 +53,6 @@ const LineChart: React.FC<LineChartProps> = ({ amounts, times }) => {
                   text: 'Amount',
                 }
               },
-              // _adapters: {
-              //   // @ts-ignore
-              //   _date: {
-              //     locale: enIN,
-              //   }
-              // }
             },
           },
         };
