@@ -10,18 +10,18 @@ import { createOnRampTransaction } from "../app/lib/actions/createOnrampTransact
 const SUPPORTED_BANKS = [
   {
     name: "HDFC Bank",
-    redirectUrl: "https://netbanking.hdfcbank.com",
+    // redirectUrl: "https://netbanking.hdfcbank.com",
   },
   {
     name: "Axis Bank",
-    redirectUrl: "https://www.axisbank.com/",
+    // redirectUrl: "https://www.axisbank.com/",
   },
 ];
 
 export const AddMoney = () => {
-  const [redirectUrl, setRedirectUrl] = useState(
-    SUPPORTED_BANKS[0]?.redirectUrl
-  );
+  // const [redirectUrl, setRedirectUrl] = useState(
+  //   SUPPORTED_BANKS[0]?.redirectUrl
+  // );
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
   const [amount, setAmount] = useState(0);
 
@@ -39,7 +39,7 @@ export const AddMoney = () => {
         <Select
           onSelect={(value) => {
             const selectedBank = SUPPORTED_BANKS.find((x) => x.name === value);
-            setRedirectUrl(selectedBank?.redirectUrl || "");
+            // setRedirectUrl(selectedBank?.redirectUrl || "");
             setProvider(selectedBank?.name || "");
           }}
           options={SUPPORTED_BANKS.map((bank) => ({

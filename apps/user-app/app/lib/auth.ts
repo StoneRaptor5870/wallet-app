@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          const balance = await prisma.balance.create({
+          await prisma.balance.create({
             data: {
               userId: user.id.toString(),
               amount: 0,
@@ -96,7 +96,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.JWT_SECRET || "secret",
+  secret: process.env.JWT_SECRET || "",
   callbacks: {
     async session({ token, session }: { token: JWT; session: Session }): Promise<Session> {
       if (session.user) {

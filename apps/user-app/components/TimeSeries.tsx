@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Chart, { ChartConfiguration, _adapters } from 'chart.js/auto';
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 
 Chart.register();
