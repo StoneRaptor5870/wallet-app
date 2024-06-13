@@ -16,6 +16,8 @@ export default async function DashboardPage() {
       OR: [
         { fromMerchantId: session?.user?.id },
         { toMerchantId: session?.user?.id },
+        { toUserId: session?.user?.id },
+        { fromUserId: session?.user?.id },
       ],
     },
     orderBy: {
