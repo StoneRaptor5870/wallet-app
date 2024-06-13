@@ -75,7 +75,7 @@ const LineChart: React.FC<LineChartProps> = ({ amounts, times }) => {
   const dateFilter = (timeUnit: string) => {
     if (lineChart && lineChart.config) {
       lineChart.config.options.scales.x.time.unit = timeUnit;
-      lineChart.update(); // Refresh the chart with the new configuration
+      lineChart.update();
     }
   }
 
