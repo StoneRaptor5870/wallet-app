@@ -2,7 +2,7 @@
   "name": "wallet-app",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "npm run db:generate && turbo run build --filter=apps/user-app",
     "dev": "turbo dev --parallel",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
