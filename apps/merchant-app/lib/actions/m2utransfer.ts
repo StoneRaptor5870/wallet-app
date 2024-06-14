@@ -17,7 +17,7 @@ export const m2utransfer = async (to: string, amount: number) => {
   });
   if (!toUser) return { message: "User not found" };
 
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: any) => {
     await tx.$queryRaw`SELECT*FROM "Balance" WHERE "userId"  = ${from} FOR UPDATE`; //locks the Balance table
     const fromBalance = await tx.balance.findFirst({
       where: {

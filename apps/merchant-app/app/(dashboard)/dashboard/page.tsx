@@ -25,7 +25,7 @@ export default async function DashboardPage() {
     },
   });
 
-  const data = transactions.map(transaction => ({
+  const data = transactions.map((transaction: any) => ({
     amount: transaction.amount,
     timestamp: new Date(transaction.timestamp).toISOString(),
   }));
