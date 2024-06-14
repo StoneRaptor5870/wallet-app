@@ -4,6 +4,11 @@ import { authOptions } from "../../lib/auth";
 import prisma from "@repo/db/client";
 import { redirect } from 'next/navigation';
 
+interface Transaction {
+  amount: number;
+  timestamp: Date;
+}
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
@@ -25,7 +30,7 @@ export default async function DashboardPage() {
     },
   });
 
-  const data = transactions.map(transaction => ({
+  const data = transactions.map((transaction: Transaction) => ({
     amount: transaction.amount,
     timestamp: new Date(transaction.timestamp).toISOString(),
   }));
