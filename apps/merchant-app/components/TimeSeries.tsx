@@ -11,7 +11,7 @@ interface LineChartProps {
 
 const LineChart: React.FC<LineChartProps> = ({ amounts, times }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
-  let lineChart: any;
+  let lineChartRef = useRef<any>(null);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -57,19 +57,19 @@ const LineChart: React.FC<LineChartProps> = ({ amounts, times }) => {
           },
         };
 
-        lineChart = new Chart(ctx, config);
+        lineChartRef.current = new Chart(ctx, config);
 
         return () => {
-          lineChart.destroy();
+          lineChartRef.current?.destroy();
         };
       }
     }
   }, [amounts, times]);
 
   const dateFilter = (timeUnit: string) => {
-    if (lineChart && lineChart.config) {
-      lineChart.config.options.scales.x.time.unit = timeUnit;
-      lineChart.update();
+    if (lineChartRef.current && lineChartRef.current.config) {
+      lineChartRef.current.config.options.scales.x.time.unit = timeUnit;
+      lineChartRef.current.update();
     }
   }
 

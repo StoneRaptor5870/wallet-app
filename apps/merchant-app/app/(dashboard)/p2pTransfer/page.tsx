@@ -20,7 +20,7 @@ const getp2ptransaction = async () => {
   return transactions;
 };
 
-export default async function () {
+export default async function P2P() {
   const transactions = await getp2ptransaction();
   return (
     <div className="w-full">

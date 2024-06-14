@@ -20,7 +20,7 @@ const getm2utransaction = async () => {
   return transactions;
 };
 
-export default async function () {
+export default async function M2U() {
   const transactions = await getm2utransaction();
   return (
     <div className="w-full">
