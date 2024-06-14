@@ -27,8 +27,8 @@ export const U2MTransactions = async ({
   return (
     <Card title="Recent Transactions">
       <div style={{ maxHeight: '16rem', overflowY: 'auto', paddingTop: '0.5rem' }}>
-        {transactions.map((t) => (
-          <div className="flex w-full justify-between my-2">
+        {transactions.map((t: any, index) => (
+          <div key={index} className="flex w-full justify-between my-2">
             {t.toMerchantId === id ? (
               <div className="flex w-full justify-between my-2">
                 <div>
