@@ -19,8 +19,8 @@ interface BodyType {
 }
 
 export const POST = async (req: NextRequest) => {
-  const bodyString = await req.text(); // Get the body as a string
-  const body = JSON.parse(bodyString); // Parse the string as JSON
+  const body = await req.json();
+  //const body = JSON.parse(bodyString); // Parse the string as JSON
 
   console.log('Received webhook call:', body);
 
