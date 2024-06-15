@@ -18,7 +18,7 @@ export async function createOnRampTransaction(
   }
 
   console.log("Generating token...");
-  const response = await axios.get("http://localhost:3002/tokenGenerator");
+  const response = await axios.get("http://localhost:3003/api/tokenGenerator");
   const token = response.data.token;
 
   console.log("Checking for existing transaction...");
@@ -36,7 +36,7 @@ export async function createOnRampTransaction(
   }
 
   console.log("Sending token and transaction details to bank server...");
-  const bankResponse = await axios.post("http://localhost:3002/bankWebhookMerchant", {
+  const bankResponse = await axios.post("http://localhost:3003/api/merchantWebhook", {
     token,
     user_identifier: session.user.id.toString(), // Ensure user_identifier is a string
     amount: amount.toString(), // Ensure amount is a string
