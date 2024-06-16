@@ -29,13 +29,15 @@ export default function SignIn() {
         <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
         <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
       </div>
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
-      <button
-        onClick={handleSubmit}
-        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-      >
-        Sign in with Google
-      </button>
+      <div className="flex flex-col h-full md:w-1/2 justify-center py-10 items-center bg-white">
+        <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello Again!</h1>
+        <p className="text-sm font-normal text-gray-600 mb-7">Welcome Back</p>
+        <button
+          onClick={handleSubmit}
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+        >
+          Sign in with Google
+        </button>
       </div>
     </div>
   );

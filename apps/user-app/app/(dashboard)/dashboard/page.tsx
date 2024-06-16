@@ -30,10 +30,27 @@ export default async function DashboardPage() {
     },
   });
 
-  const data: MappedTransaction[] = transactions.map((transaction: any) => ({
+  const onRampTxn = await prisma.onRampTransaction.findMany({
+    where: {
+      userId: session?.user?.id
+    },
+    orderBy: {
+      startTime: "desc",
+    },
+  });
+
+  const data2: MappedTransaction[] = onRampTxn.map((txn: any) => ({
+    amount: txn.amount,
+    timestamp: txn.startTime
+  }));
+
+  const data1: MappedTransaction[] = transactions.map((transaction: any) => ({
     amount: transaction.amount,
     timestamp: new Date(transaction.timestamp).toISOString(),
   }));
+
+  const data: MappedTransaction[] = [...data1, ...data2];
+  data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
   const name = session?.user?.name;
   const amounts = data.map(transaction => transaction.amount);

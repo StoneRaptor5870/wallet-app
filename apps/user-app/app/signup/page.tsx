@@ -28,7 +28,7 @@ export default function SignUp() {
 
   return (
     <div className="h-screen md:flex">
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
+      <div className="relative overflow-hidden md:flex w-full md:w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 justify-around items-center hidden">
         <div>
           <h1 className="text-white font-bold text-4xl font-sans">GoFinance</h1>
           <p className="text-white mt-1">Wallet App</p>
@@ -38,7 +38,7 @@ export default function SignUp() {
         <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
         <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
       </div>
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
+      <div className="flex flex-grow h-full md:w-1/2 justify-center py-10 items-center bg-white">
         <form className="bg-white" onSubmit={handleSubmit}>
           <h1 className="text-gray-800 font-bold text-2xl mb-1">
             Hello!
