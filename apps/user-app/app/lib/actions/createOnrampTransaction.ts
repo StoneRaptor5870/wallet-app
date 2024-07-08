@@ -5,10 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import axios from "axios";
 
-export async function createOnRampTransaction(
-  provider: string,
-  amount: number
-) {
+export async function createOnRampTransaction(provider: string, amount: number) {
   const session = await getServerSession(authOptions);
   if (!session?.user || !session.user?.id) {
     console.error("Unauthenticated request");
@@ -68,16 +65,40 @@ export async function createOnRampTransaction(
 
   if (bankResponse.data.message === "Captured") {
     console.log("Creating transaction in database...");
-    await prisma.onRampTransaction.create({
-      data: {
-        provider,
-        status: "Success",
-        startTime: new Date(),
-        token: token,
-        userId: session.user.id,
-        amount: amount,
-        balanceId: balance.id
-      },
+    const transaction = await prisma.$transaction(async (tx) => {
+      const onRampTransaction = await tx.onRampTransaction.create({
+        data: {
+          provider,
+          status: "Success",
+          startTime: new Date(),
+          token: token,
+          userId: session.user.id,
+          amount: amount,
+          balanceId: balance.id,
+        },
+      });
+
+      // await tx.balance.update({
+      //   where: {
+      //     userId: session.user.id,
+      //   },
+      //   data: {
+      //     amount: {
+      //       increment: Number(amount),
+      //     },
+      //   },
+      // });
+
+      await tx.balanceHistory.create({
+        data: {
+          amount: balance.amount + Number(amount),
+          timestamp: new Date(),
+          balanceId: balance.id,
+          onRampTxnId: onRampTransaction.id,
+        },
+      });
+
+      return onRampTransaction;
     });
 
     return {

@@ -16,66 +16,43 @@ export default async function DashboardPage() {
     redirect('/signin');
   }
 
-  const transactions = await prisma.p2PTransfer.findMany({
+  // Fetch balance history for the user
+  const balanceHistory = await prisma.balanceHistory.findMany({
     where: {
-      OR: [
-        { fromUserId: session?.user?.id },
-        { toUserId: session?.user?.id },
-        { toMerchantId: session?.user?.id },
-        { fromMerchantId: session?.user?.id },
-      ],
+      balance: {
+        OR: [
+          { userId: session.user.id },
+          { merchantId: session.user.id }
+        ],
+      },
     },
     include: {
-      fromBalance: true,
-      toBalance: true
+      balance: true,
+      p2pTransfer: true,
+      onRampTxn: true,
     },
     orderBy: {
       timestamp: "desc",
     },
   });
 
-  const onRampTxn = await prisma.onRampTransaction.findMany({
-    where: {
-      userId: session?.user?.id
-    },
-    include: {
-      balance: true
-    },
-    orderBy: {
-      startTime: "desc",
-    },
-  });
-
-  console.log("------------onramp-------------",onRampTxn)
-  console.log("---------------------------p2p-----------------", transactions)
-
-  const data2: MappedTransaction[] = onRampTxn.map((txn: any) => ({
-    amount: txn.balance?.amount,
-    timestamp: txn.startTime
+  // Map balance history entries to the desired format
+  const data: MappedTransaction[] = balanceHistory.map((history) => ({
+    amount: history.amount,
+    timestamp: new Date(history.timestamp).toISOString(),
   }));
 
-  const data1: MappedTransaction[] = transactions.map((transaction: any) => {
-    let amount = 0;
-  
-    // Determine if the transaction is a transfer from the sender or a deposit to the receiver
-    if (transaction.fromUserId === session.user.id) {
-      amount = transaction.fromBalance?.amount; // Deduct amount from sender's balance
-    } else if (transaction.toUserId === session.user.id) {
-      amount = transaction.toBalance?.amount; // Add amount to receiver's balance
-    }
-  
-    return {
-      amount: amount,
-      timestamp: new Date(transaction.timestamp).toISOString(),
-    };
-  });
-
-  const data: MappedTransaction[] = [...data1, ...data2];
+  // Ensure data is sorted by timestamp
   data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
-  const name = session?.user?.name;
+  console.log("---------------------------------data---------------------------", data);
+
+  const name = session.user.name;
   const amounts = data.map(transaction => transaction.amount);
   const times = data.map(transaction => transaction.timestamp);
+
+  console.log("times-------------------", times);
+  console.log("amounts--------------------", amounts);
 
   return (
     <div className="flex flex-col items-center justify-center w-full p-4 gap-4 -mt-4">

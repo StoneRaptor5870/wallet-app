@@ -35,6 +35,7 @@ model P2PTransfer {
   fromBalance     Balance?  @relation(name: "FromBalanceRelation", fields: [fromBalanceId], references: [id])
   toBalanceId     Int?      
   toBalance       Balance?  @relation(name: "ToBalanceRelation", fields: [toBalanceId], references: [id])
+  balanceHistory BalanceHistory[]
 
   @@unique([fromUserId, fromMerchantId, toUserId, toMerchantId])
 }
@@ -63,6 +64,7 @@ model OnRampTransaction {
   merchant   Merchant?    @relation(fields: [merchantId], references: [id])
   balanceId  Int?         
   balance    Balance?     @relation(fields: [balanceId], references: [id])
+  balanceHistory BalanceHistory[]
 
   @@unique([userId, merchantId])
 }
@@ -78,8 +80,21 @@ model Balance {
   transactions  OnRampTransaction[]
   p2pTransfersFrom P2PTransfer[] @relation(name: "FromBalanceRelation")
   p2pTransfersTo   P2PTransfer[] @relation(name: "ToBalanceRelation")
+  balanceHistories  BalanceHistory[]
 
   @@unique([userId, merchantId])
+}
+
+model BalanceHistory {
+  id              Int              @id @default(autoincrement())
+  amount          Int
+  timestamp       DateTime
+  balanceId       Int
+  balance         Balance          @relation(fields: [balanceId], references: [id])
+  p2pTransferId   Int?
+  p2pTransfer     P2PTransfer?     @relation(fields: [p2pTransferId], references: [id])
+  onRampTxnId     Int?
+  onRampTxn       OnRampTransaction? @relation(fields: [onRampTxnId], references: [id])
 }
 
 enum AuthType {

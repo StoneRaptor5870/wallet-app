@@ -54,7 +54,7 @@ export const p2ptransfer = async (to: string, amount: number) => {
       },
     });
 
-    await tx.p2PTransfer.create({
+    const transfer = await tx.p2PTransfer.create({
       data: {
         fromUserId: from,
         toUserId: toUser.id,
@@ -62,6 +62,24 @@ export const p2ptransfer = async (to: string, amount: number) => {
         amount: Number(amount),
         fromBalanceId: fromBalance.id,
         toBalanceId: toBalance.id,
+      },
+    });
+
+    await tx.balanceHistory.create({
+      data: {
+        amount: fromBalance.amount - Number(amount),
+        timestamp: new Date(),
+        balanceId: fromBalance.id,
+        p2pTransferId: transfer.id,
+      },
+    });
+
+    await tx.balanceHistory.create({
+      data: {
+        amount: toBalance.amount + Number(amount),
+        timestamp: new Date(),
+        balanceId: toBalance.id,
+        p2pTransferId: transfer.id,
       },
     });
 
