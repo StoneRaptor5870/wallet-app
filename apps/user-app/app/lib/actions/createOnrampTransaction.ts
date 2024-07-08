@@ -35,6 +35,24 @@ export async function createOnRampTransaction(
     };
   }
 
+  console.log("Finding or creating balance entry...");
+  // Find or create balance entry for the user
+  let balance = await prisma.balance.findFirst({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
+  if (!balance) {
+    balance = await prisma.balance.create({
+      data: {
+        userId: session.user.id,
+        amount: 0,
+        locked: 0,
+      },
+    });
+  }
+
   console.log("Sending token and transaction details to bank server...");
   const bankResponse = await axios.post("https://wallet-app-bank-webhook-server.vercel.app/api/userWebhook", {
     token,
@@ -58,6 +76,7 @@ export async function createOnRampTransaction(
         token: token,
         userId: session.user.id,
         amount: amount,
+        balanceId: balance.id
       },
     });
 

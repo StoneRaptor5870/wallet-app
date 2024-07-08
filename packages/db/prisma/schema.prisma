@@ -31,6 +31,10 @@ model P2PTransfer {
   fromMerchant       Merchant? @relation(name: "FromMerchantRelation", fields: [fromMerchantId], references: [id])
   toMerchantId       String?
   toMerchant         Merchant? @relation(name: "ToMerchantRelation", fields: [toMerchantId], references: [id])
+  fromBalanceId   Int?      
+  fromBalance     Balance?  @relation(name: "FromBalanceRelation", fields: [fromBalanceId], references: [id])
+  toBalanceId     Int?      
+  toBalance       Balance?  @relation(name: "ToBalanceRelation", fields: [toBalanceId], references: [id])
 
   @@unique([fromUserId, fromMerchantId, toUserId, toMerchantId])
 }
@@ -57,6 +61,8 @@ model OnRampTransaction {
   user      User?         @relation(fields: [userId], references: [id])
   merchantId String?
   merchant   Merchant?    @relation(fields: [merchantId], references: [id])
+  balanceId  Int?         
+  balance    Balance?     @relation(fields: [balanceId], references: [id])
 
   @@unique([userId, merchantId])
 }
@@ -69,6 +75,9 @@ model Balance {
   locked Int              @default(0)
   user   User? @relation(fields: [userId], references: [id])
   merchant   Merchant? @relation(fields: [merchantId], references: [id])
+  transactions  OnRampTransaction[]
+  p2pTransfersFrom P2PTransfer[] @relation(name: "FromBalanceRelation")
+  p2pTransfersTo   P2PTransfer[] @relation(name: "ToBalanceRelation")
 
   @@unique([userId, merchantId])
 }
