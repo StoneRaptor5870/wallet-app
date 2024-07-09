@@ -24,6 +24,12 @@ export const p2ptransfer = async (to: string, amount: number) => {
         merchantId: from,
       },
     });
+    const toBalance = await tx.balance.findFirst({
+      where: {
+        merchantId: toUser.id,
+      },
+    });
+
     if (!fromBalance || fromBalance?.amount < amount) {
       return { message: "Insufficient funds" };
     }
@@ -48,12 +54,31 @@ export const p2ptransfer = async (to: string, amount: number) => {
       },
     });
 
-    await tx.p2PTransfer.create({
+    const transfer = await tx.p2PTransfer.create({
       data: {
         fromMerchantId: from,
         toMerchantId: toUser.id,
         timestamp: new Date(),
         amount: Number(amount),
+        toBalanceId: toBalance.id,
+      },
+    });
+
+    await tx.balanceHistory.create({
+      data: {
+        amount: fromBalance.amount - Number(amount),
+        timestamp: new Date(),
+        balanceId: fromBalance.id,
+        p2pTransferId: transfer.id,
+      },
+    });
+
+    await tx.balanceHistory.create({
+      data: {
+        amount: toBalance.amount + Number(amount),
+        timestamp: new Date(),
+        balanceId: toBalance.id,
+        p2pTransferId: transfer.id,
       },
     });
 

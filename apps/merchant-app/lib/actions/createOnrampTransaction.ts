@@ -35,6 +35,24 @@ export async function createOnRampTransaction(
     };
   }
 
+  console.log("Finding or creating balance entry...");
+  // Find or create balance entry for the user
+  let balance = await prisma.balance.findFirst({
+    where: {
+      merchantId: session.user.id,
+    },
+  });
+
+  if (!balance) {
+    balance = await prisma.balance.create({
+      data: {
+        merchantId: session.user.id,
+        amount: 0,
+        locked: 0,
+      },
+    });
+  }
+
   console.log("Sending token and transaction details to bank server...");
   const bankResponse = await axios.post("https://wallet-app-bank-webhook-server.vercel.app/api/merchantWebhook", {
     token,
@@ -46,15 +64,29 @@ export async function createOnRampTransaction(
 
   if (bankResponse.data.message === "Captured") {
     console.log("Creating transaction in database...");
-    await prisma.onRampTransaction.create({
-      data: {
-        provider,
-        status: "Success",
-        startTime: new Date(),
-        token: token,
-        merchantId: session.user.id,
-        amount: amount,
-      },
+    const transaction = await prisma.$transaction(async (tx) => {
+      const onRampTransaction = await tx.onRampTransaction.create({
+        data: {
+          provider,
+          status: "Success",
+          startTime: new Date(),
+          token: token,
+          merchantId: session.user.id,
+          amount: amount,
+          balanceId: balance.id,
+        },
+      });
+
+      await tx.balanceHistory.create({
+        data: {
+          amount: balance.amount + Number(amount),
+          timestamp: new Date(),
+          balanceId: balance.id,
+          onRampTxnId: onRampTransaction.id,
+        },
+      });
+
+      return onRampTransaction;
     });
 
     return {

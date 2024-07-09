@@ -11,28 +11,43 @@ export default async function DashboardPage() {
     redirect('/signin');
   }
 
-  const transactions = await prisma.p2PTransfer.findMany({
+  // Fetch balance history for the user
+  const balanceHistory = await prisma.balanceHistory.findMany({
     where: {
-      OR: [
-        { fromMerchantId: session?.user?.id },
-        { toMerchantId: session?.user?.id },
-        { toUserId: session?.user?.id },
-        { fromUserId: session?.user?.id },
-      ],
+      balance: {
+        OR: [
+          { userId: session.user.id },
+          { merchantId: session.user.id }
+        ],
+      },
+    },
+    include: {
+      balance: true,
+      p2pTransfer: true,
+      onRampTxn: true,
     },
     orderBy: {
       timestamp: "desc",
     },
   });
 
-  const data = transactions.map((transaction: any) => ({
-    amount: transaction.amount,
-    timestamp: new Date(transaction.timestamp).toISOString(),
+  // Map balance history entries to the desired format
+  const data = balanceHistory.map((history) => ({
+    amount: history.amount,
+    timestamp: new Date(history.timestamp).toISOString(),
   }));
 
-  const name = session?.user?.name;
+  // Ensure data is sorted by timestamp
+  data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+  console.log("---------------------------------data---------------------------", data);
+
+  const name = session.user.name;
   const amounts = data.map(transaction => transaction.amount);
   const times = data.map(transaction => transaction.timestamp);
+
+  console.log("times-------------------", times);
+  console.log("amounts--------------------", amounts);
 
   return (
     <div className="flex flex-col items-center justify-center w-full p-4 gap-4 -mt-4">
