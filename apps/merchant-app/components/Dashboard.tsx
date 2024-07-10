@@ -40,6 +40,12 @@ const Dashboard: React.FC<DashboardProps> = ({ amounts, times }) => {
               This feature lets you transfer money to merchant by their email.
             </div>
           </div>
+          <div className="w-full p-4">
+            <p className="text-xl">Balance History</p>
+            <div>
+              This feature lets you see all your transactions that you made to your peers, merchants and the money added to your wallet.
+            </div>
+          </div>
         </div>
       </Card>
     </div>
